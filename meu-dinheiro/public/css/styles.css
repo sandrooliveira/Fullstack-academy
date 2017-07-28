@@ -1,0 +1,22 @@
+body{
+    margin: 0;
+    font-family: sans-serif;
+}
+
+.header{
+    background: gray; 
+    padding:20px; 
+    text-align:center;
+}
+
+.content{
+    background: #efefef
+}
+
+.resutado{
+    width: 300px;
+    margin: 0 auto;
+    background: yellow;
+    text-align: center;
+    padding: 15px;
+}

@@ -1,0 +1,26 @@
+﻿ECMA Script: Padrão/specificação da linguagem
+ES5,6,7,8
+
+
+Pesquisar sobre:
+Standard JS
+Programação funcional
+Async await
+http://caniuse.com/#feat=async-functions
+node.green
+Arrow Function
+Digital ocean
+EJS - Linguagem de template
+Gist
+
+
+Assistir:
+MPJME
+UX - Write code for humans: https://youtu.be/loj3CLHovt0
+
+Tools:
+Commander
+
+
+Conceitos MongoDB
+Collection: Nome do grupo de documentos
