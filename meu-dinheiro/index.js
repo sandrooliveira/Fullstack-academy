@@ -25,17 +25,29 @@ app.get('/', (req, res) => {
 
 const calculoJuros = (p, i, n) => p * Math.pow(1 + i, n)
 
+const calcEvolution = (p,i,n) => {
+    const months = Array.from(new Array(n), (n,i) => i + 1)
+    return months.map((month) => {
+        return {
+            month:month,
+            value:calculoJuros(p,i,month)
+        }
+    })   
+}
+
 app.get('/calculadora', (req, res) => {
     const resultado = {
         calculado: false
     }
     if (req.query.valorInicial && req.query.taxa && req.query.tempo) {
+        
+        const valorInicial = parseFloat(req.query.valorInicial)
+        const taxa = parseFloat(req.query.taxa) / 100
+        const tempo = parseInt(req.query.tempo)
+
         resultado.calculado = true
-        resultado.total = calculoJuros(
-            parseFloat(req.query.valorInicial),
-            parseFloat(req.query.taxa) / 100,
-            parseInt(req.query.tempo)
-        )
+        resultado.total = calculoJuros(valorInicial,taxa,tempo)
+        resultado.evolution = calcEvolution(valorInicial,taxa,tempo)
     }
     res.render('calculadora', { resultado })
 })
@@ -66,9 +78,38 @@ const insert = (db, collectionName, document) => {
     })
 }
 
+const calcExtrato = (operacoes) => {
+    const opsWithSubTotal = []
+    const total = operacoes.reduce((prev,curr) => {
+        const valor = parseFloat(curr.valor)
+        opsWithSubTotal.push({
+            description:curr.descricao,
+            value:valor,
+            subTotal:prev + valor
+        })
+        return prev +  valor;
+    },0)
+
+    return {
+        total:total,
+        operacoes:opsWithSubTotal
+    }
+}
+
+const filterOps = (operacoes,tipo) => {
+    return tipo === 'entradas' ? operacoes.filter((op) => op.valor >= 0) : operacoes.filter((op) => op.valor < 0)
+}
+
 app.get('/operacoes', async (req, res) => {
     const operacoes = await findAll(app.db, 'operacoes')
-    res.render('operacoes', { operacoes })
+    let extrato = null
+    if(req.query.tipo){ 
+        const filteredOps = filterOps(operacoes,req.query.tipo)
+        extrato = calcExtrato(filteredOps)
+    }else{
+        extrato = calcExtrato(operacoes)
+    }
+    res.render('operacoes', { extrato })
 })
 
 app.get('/nova-operacao', (req, res) => res.render('nova-operacao'))

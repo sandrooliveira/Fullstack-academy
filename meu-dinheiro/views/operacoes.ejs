@@ -1,6 +1,29 @@
 <% include header %>
     <h2>Operaçoes</h2>
-    <% operacoes.forEach((operacao) => { %>
-        <p><%=operacao.descricao %> R$ <%=operacao.valor %></p>
-    <% }) %>
+    <a href="/operacoes">Todas</a>
+    <a href="/operacoes?tipo=entradas">Entradas</a>
+    <a href="/operacoes?tipo=saidas">Saídas</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Value</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% extrato.operacoes.forEach((operacao) => { %>
+                <tr>
+                    <td><%= operacao.description %></td>
+                    <td>R$ <%= operacao.value %></td>
+                    <td>R$ <%= operacao.subTotal %></td>
+                </tr>
+            <% }) %>
+            <tr>
+                <td></td>
+                <td>Saldo</td>
+                <td><%= extrato.total %></td>
+            </tr>
+        </tbody>
+    </table>
 <% include footer %>
